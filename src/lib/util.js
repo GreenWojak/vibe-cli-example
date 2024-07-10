@@ -24,8 +24,3 @@ export const modal = createWeb3Modal({
   wagmiConfig: config,
   projectId,
 })
-
-export interface Contract {
-  deployments: any;
-  abi: any;
-}

@@ -10,9 +10,13 @@ contract Counter {
 
   function increment() public {
     number++;
+    emit Change(number);
   }
 
   function decrement() public {
     number--;
+    emit Change(number);
   }
+
+  event Change(uint _value);
 }

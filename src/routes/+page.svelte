@@ -1,11 +1,59 @@
 <script>
 import { modal, config } from '$lib/util';
-import { watchAccount, getAccount } from '@wagmi/core'
+import { watchAccount, getAccount, getChainId } from '@wagmi/core'
+import { readContract, writeContract, simulateContract } from '@wagmi/core'
+import { deployments, abi } from '$lib/contracts/Counter.json'
+import { watchContractEvent } from '@wagmi/core'
 
+let nr = $state(undefined);
 let address = $state(undefined);
+let chainId = $state(getChainId(config));
+
+readContract(config, {
+  address: deployments[chainId],
+  abi: abi,
+  functionName: 'number'
+}).then((val) => {
+  console.log('New val!', val)
+  nr = val;
+})
+
+watchContractEvent(config, {
+  address: deployments[chainId], abi: abi, eventName: 'Change',
+  onChange(val) {
+    console.log('New val!', val)
+    nr = val;
+  },
+  onLogs(logs) { 
+    console.log('Logs changed!', logs)
+    console.dir(logs[0].args._value)
+    nr = logs[0].args._value;
+  }, 
+})
 
 function openModal() {
   modal.open();
+}
+
+
+async function increment() {
+  const { request } = await simulateContract(config, {
+    address: deployments[chainId],
+    abi: abi,
+    functionName: 'increment',
+  })
+  const hash = await writeContract(config, request)
+  console.dir(hash)
+}
+
+async function decrement() {
+  const { request } = await simulateContract(config, {
+    address: deployments[chainId],
+    abi: abi,
+    functionName: 'decrement',
+  })
+  const hash = await writeContract(config, request)
+  console.dir(hash)
 }
 
 watchAccount(config, {
@@ -15,14 +63,13 @@ watchAccount(config, {
 });
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-{#if address }
-<button onclick={openModal} type="button" class="btn btn-sm w-40 h-8 variant-soft-primary rounded-lg line-clamp-1 truncate">
-  {address}
+<button onclick={openModal}>
+  {address ?? ' Connect'}
 </button>
-{:else}
-<button onclick={openModal} type="button" class="btn btn-sm w-40 h-8 variant-soft-primary rounded-lg">
-  Connect
+<button onclick={increment}>
+  Increment
 </button>
-{/if}
+<button onclick={decrement}>
+  Decrement
+</button>
+<span>{nr}</span>
