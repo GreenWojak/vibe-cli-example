@@ -1,38 +1,22 @@
-# create-svelte
+# Vibe-CLI Example Project
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+This is an example project for [Vibe-CLI](https://github.com/GreenWojak/vibe-cli).
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Install dependencies with `npm install` (or `pnpm`/`yarn`/`bun`).
+
+Fork a network locally, deploy contracts and start a development server:
 
 ```bash
+vibe fork polygon -d
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+You can now interact with the deployed contract using the front-end by connecting your wallet.
 
-To create a production version of your app:
-
+Run scripts with `vibe run`:
 ```bash
-npm run build
+vibe run increment
+vibe run decrement
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
