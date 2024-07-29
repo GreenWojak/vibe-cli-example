@@ -4,6 +4,7 @@ export default {
   },
   chains: {
     polygon: {
+      forkBlockTime: 2,
       supplyBalance: "100000000000000000000000",
       supplyAddresses: ['0x2e2B92F976339945b3070E0262E2A9BC82928a1e'],
       supplyTokens: [
